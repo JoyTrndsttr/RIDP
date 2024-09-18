@@ -19,5 +19,7 @@ def check_waveform(type, data):
         return True
     if type in ["ZDWY2", "ZDWY1"]: #梁体横向/纵向振幅 0附近抖动+正弦波+大抖动+正弦波+0附近抖动
         return True
+    if type in ["DND", "DYB"]:#梁体动挠度/动应变 目前不知道如何处理
+        return True
     if type in ["WD", "SD"]:#温度、湿度 应该不用处理
         return True

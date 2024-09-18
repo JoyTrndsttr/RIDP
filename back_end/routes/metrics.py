@@ -12,7 +12,7 @@ def get_times():
 
 @metrics_bp.route('/types', methods=['GET'])
 def get_types():
-    types = ["ZZWY1", "ZZWY2", "ZZWY3", "ZZWY4", "LFWY", "ZDJSD2", "ZDWY2", "ZDJSD1", "ZDWY1", "LDQJ", "WD", "SD", "SXJSDX", "XDWY1", "XDWY2", "SXJSDZ", "SXJSDY"]
+    types = ["ZZWY1", "ZZWY2", "ZZWY3", "ZZWY4", "LFWY", "ZDJSD2", "ZDWY2", "ZDJSD1", "ZDWY1", "LDQJ", "WD", "SD", "SXJSDX", "XDWY1", "XDWY2", "SXJSDZ", "SXJSDY", "DND", "DYB"]
     return jsonify(types)
 
 @metrics_bp.route('/metrics', methods=['GET'])
