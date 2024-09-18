@@ -1,4 +1,4 @@
-def check_overall_std(data):
+def check_overall_std(data): #判断方差是否在一定范围内
     overall_std = data['数据'].std() # 计算整体方差
     threshold = 0.001  # 方差的阈值
     print(f"overall_std:{overall_std}   threshold:{threshold}")
