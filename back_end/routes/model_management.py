@@ -1,13 +1,17 @@
 from flask import Blueprint, request, jsonify
+from utils import DataQuery
 
 model_management_bp = Blueprint('model_management', __name__)
 
 @model_management_bp.route('/model-management/settings', methods=['POST'])
 def set_model_params():
-    data = request.json
-    # 处理模型参数设置，这里应将数据保存至数据库或进行模型配置
-    return jsonify({"status": "success", "data": data})
+    BridgeType = request.args.get('BridgeType')
+    ModelType = request.args.get('ModelType')
+    Parameters = request.args.get('Parameters')
+    DataQuery.update_parameters_by_bridge_and_model(BridgeType,ModelType,Parameters)
+    return jsonify({"status": "success"})
 
+#待修改
 @model_management_bp.route('/model-management/processed', methods=['GET'])
 def get_processed_results():
     location = request.args.get('location')
