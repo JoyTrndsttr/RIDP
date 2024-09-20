@@ -16,7 +16,12 @@ def get_times_by_bridge(bridge_name):
         connection.close()
 
 def get_file_name_and_content_by_bridge_time_type(bridge, time, type):
-    sql = "SELECT FileName, FileContent FROM Metrics WHERE Bridge = %s AND Time = %s AND Type = %s;"
+    sql = '''
+    SELECT m.FileName, fc.Content AS FileContent
+    FROM Metrics m
+    JOIN FileContents fc ON m.ContentID = fc.ContentID
+    WHERE m.Bridge = %s AND m.Time = %s AND m.Type = %s;
+    '''
     try:
         connection = connect_db()
         with connection.cursor() as cursor:
