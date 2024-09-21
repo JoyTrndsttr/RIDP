@@ -8,11 +8,8 @@ from utils import DataQuery
 def filter_data(data, window_size):
     """Applies a moving average filter to the data and keeps the original data structure."""
     values = np.array([d['value'] for d in data])
-    # Applying a simple moving average filter
     weights = np.ones(window_size) / window_size
     filtered_values = np.convolve(values, weights, mode='same')  # 'same' keeps the original length
-
-    # Creating a new list of dictionaries with the filtered values
     filtered_data = [{'time': d['time'], 'value': fv} for d, fv in zip(data, filtered_values)]
     return filtered_data
 
