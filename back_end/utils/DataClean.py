@@ -17,7 +17,8 @@ def is_valid_waveform(data, threshold=[0.01,0.1,0.01,0.01]):
         "初始段": "正常",
         "峰值检测": "正常",
         "峰值抖动": "正常",
-        "最终段": "正常"
+        "最终段": "正常",
+        "y值偏移": "正常"
     }
     flag = True
 
@@ -25,9 +26,8 @@ def is_valid_waveform(data, threshold=[0.01,0.1,0.01,0.01]):
     # 1. 初始段判断：前10%数据应在0附近
     initial_values = values[:len(values) // 10]
     if np.abs(initial_values).mean() > threshold[0]:
-        result['初始段'] = '初始段不符合'
+        result['初始段'] = '初始段波动过大'
         result["检测结果"] = False
-
     # 2. 峰值检测：检测波峰或波谷
     peaks, _ = find_peaks(values, height=threshold[1], width=len(values) // 20, prominence=threshold[1])  # 波峰
     troughs, _ = find_peaks(-values, height=threshold[1], width=len(values) // 20, prominence=threshold[1])  # 波谷
@@ -46,11 +46,15 @@ def is_valid_waveform(data, threshold=[0.01,0.1,0.01,0.01]):
         if np.std(peak_region) > threshold[2]:
             result["峰值抖动"] = '峰值附近波动过大'
             result["检测结果"] = False
-
     # 4. 结束段判断：最后10%数据应回到0附近
     final_values = values[-len(values) // 10:]
     if np.abs(final_values).mean() > threshold[3]:
-        result["最终段"] = '最终段不符合'
+        result["最终段"] = '最终段波动过大'
+        result["检测结果"] = False
+    # 5. 平移检测
+    bias = (np.abs(initial_values).mean() + np.abs(final_values).mean()) / 2
+    if bias > threshold[1]/5:
+        result["y值偏移"] = f'bias={bias} 未响应段不在0附近波动'
         result["检测结果"] = False
 
     # 若通过所有检查，则为正确波形

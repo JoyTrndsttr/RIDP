@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from utils import DataQuery,DataClean
+from utils import DataQuery,DataClean,DataCut
 import json
 
 model_management_bp = Blueprint('model_management', __name__)
@@ -25,15 +25,21 @@ def get_cleaned_results():
     result = DataClean.is_valid_waveform(data, threshold)
     return jsonify({"status": "success", "result": result})
 
-#待修改
-@model_management_bp.route('/model-management/processed', methods=['GET'])
-def get_processed_results():
-    location = request.args.get('location')
-    datetime = request.args.get('datetime')
-    # 返回处理后的结果，这里需要根据参数从模型获取数据
-    processed_data = {
-        "location": location,
-        "datetime": datetime,
-        "processed_results": "数据"
-    }
-    return jsonify(processed_data)
+@model_management_bp.route('/model-management/cut', methods=['GET'])
+def get_cut_results():
+    bridge = request.args.get('bridge')
+    time = request.args.get('time')
+    type = request.args.get('type')
+    Parameters = json.loads(request.args.get('Parameters'))
+    threshold = Parameters['threshold']
+    extension = Parameters['extension']
+
+    metrics = DataQuery.get_file_name_and_content_by_bridge_time_type(bridge, time, type)
+    data = json.loads(metrics['FileContent'])
+    start_index, end_index, bias = DataCut.find_waveform_segment(data, threshold, extension)
+
+    cut_data = data[start_index:end_index]
+    for item in cut_data:
+        item['value'] -= bias
+    return jsonify({"status": "success", "data": cut_data})
+
