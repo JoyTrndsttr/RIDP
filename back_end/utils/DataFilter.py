@@ -2,14 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import pandas as pd
-from utils import DataQuery
-# import DataQuery
+# from utils import DataQuery
+import DataQuery
 
 def filter_data(data, window_size):
-    """Applies a moving average filter to the data and keeps the original data structure."""
     values = np.array([d['value'] for d in data])
+    pad_width = window_size // 2
+    padded_values = np.pad(values, pad_width, mode='reflect')
     weights = np.ones(window_size) / window_size
-    filtered_values = np.convolve(values, weights, mode='same')
+    filtered_values = np.convolve(padded_values, weights, mode='valid')
     filtered_data = [{'time': d['time'], 'value': fv} for d, fv in zip(data, filtered_values)]
     return filtered_data
 
