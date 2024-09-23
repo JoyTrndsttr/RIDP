@@ -5,7 +5,7 @@ def connect_db():
     return pymysql.connect(host='localhost', user='user', password='123456', db='ridp', charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
 def get_times_by_bridge(bridge_name):
-    sql = "SELECT Time FROM Metrics WHERE Bridge = %s;"
+    sql = "SELECT DISTINCT Time FROM Metrics WHERE Bridge = %s;"
     try:
         connection = connect_db()
         with connection.cursor() as cursor:
