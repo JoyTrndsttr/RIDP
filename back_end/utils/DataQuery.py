@@ -31,23 +31,23 @@ def get_file_name_and_content_by_bridge_time_type(bridge, time, type):
     finally:
         connection.close()
 
-def get_parameters_by_type_and_model(bridge_type, model_type):
+def get_parameters_by_type_and_model(type, model_type):
     sql = "SELECT Parameters FROM model WHERE Type = %s AND ModelType = %s;"
     try:
         connection = connect_db()
         with connection.cursor() as cursor:
-            cursor.execute(sql, (bridge_type, model_type))
+            cursor.execute(sql, (type, model_type))
             result = cursor.fetchone()
             return result['Parameters'] if result else None
     finally:
         connection.close()
 
-def update_parameters_by_type_and_model(bridge_type, model_type, new_parameters):
+def update_parameters_by_type_and_model(type, model_type, new_parameters):
     sql = "UPDATE model SET Parameters = %s WHERE Type = %s AND ModelType = %s;"
     try:
         connection = connect_db()
         with connection.cursor() as cursor:
-            cursor.execute(sql, (new_parameters, bridge_type, model_type))
-            connection.commit()  # Ensure changes are committed to the database
+            cursor.execute(sql, (new_parameters, type, model_type))
+            connection.commit()
     finally:
         connection.close()

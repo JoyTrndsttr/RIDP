@@ -6,10 +6,10 @@ model_management_bp = Blueprint('model_management', __name__)
 
 @model_management_bp.route('/model-management/settings', methods=['POST'])
 def set_model_params():
-    BridgeType = request.args.get('BridgeType')
-    ModelType = request.args.get('ModelType')
+    type = request.args.get('type')
+    ModelType = request.args.get('modelType')
     Parameters = request.args.get('Parameters')
-    DataQuery.update_parameters_by_bridge_and_model(BridgeType,ModelType,Parameters)
+    DataQuery.update_parameters_by_type_and_model(type,ModelType,Parameters)
     return jsonify({"status": "success"})
 
 @model_management_bp.route('/model-management/clean', methods=['GET'])

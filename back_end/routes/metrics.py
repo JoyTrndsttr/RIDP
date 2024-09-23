@@ -15,6 +15,11 @@ def get_types():
     types = ["ZZWY1", "ZZWY2", "ZZWY3", "ZZWY4", "LFWY", "ZDJSD2", "ZDWY2", "ZDJSD1", "ZDWY1", "LDQJ", "WD", "SD", "SXJSDX", "XDWY1", "XDWY2", "SXJSDZ", "SXJSDY", "DND", "DYB"]
     return jsonify(types)
 
+@metrics_bp.route('/modelTypes', methods=['GET'])
+def get_modelTypes():
+    types = ["CleanModel", "CutModel", "FilterModel"]
+    return jsonify(types)
+
 @metrics_bp.route('/metrics', methods=['GET'])
 def get_metrics():
     bridge = request.args.get('bridge')
