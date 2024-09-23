@@ -31,8 +31,8 @@ def get_file_name_and_content_by_bridge_time_type(bridge, time, type):
     finally:
         connection.close()
 
-def get_parameters_by_bridge_and_model(bridge_type, model_type):
-    sql = "SELECT Parameters FROM model WHERE BridgeType = %s AND ModelType = %s;"
+def get_parameters_by_type_and_model(bridge_type, model_type):
+    sql = "SELECT Parameters FROM model WHERE Type = %s AND ModelType = %s;"
     try:
         connection = connect_db()
         with connection.cursor() as cursor:
@@ -42,8 +42,8 @@ def get_parameters_by_bridge_and_model(bridge_type, model_type):
     finally:
         connection.close()
 
-def update_parameters_by_bridge_and_model(bridge_type, model_type, new_parameters):
-    sql = "UPDATE model SET Parameters = %s WHERE BridgeType = %s AND ModelType = %s;"
+def update_parameters_by_type_and_model(bridge_type, model_type, new_parameters):
+    sql = "UPDATE model SET Parameters = %s WHERE Type = %s AND ModelType = %s;"
     try:
         connection = connect_db()
         with connection.cursor() as cursor:

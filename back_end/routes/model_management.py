@@ -53,4 +53,32 @@ def get_filtered_results():
     metrics = DataQuery.get_file_name_and_content_by_bridge_time_type(bridge, time, type)
     data = json.loads(metrics['FileContent'])
     filtered_data = DataFilter.filter_data(data, window_size)
-    return jsonify({"status": "success", "data": filtered_data})
+    max_abs_value = max(abs(d['value']) for d in filtered_data)
+    return jsonify({"status": "success", "data": filtered_data, "max_abs": max_abs_value})
+
+#完整处理流程，返回最终结果
+@model_management_bp.route('/model-management/process', methods=['GET'])
+def get_processed_results():
+    bridge = request.args.get('bridge')
+    time = request.args.get('time')
+    type = request.args.get('type')
+    metrics = DataQuery.get_file_name_and_content_by_bridge_time_type(bridge, time, type)
+    data = json.loads(metrics['FileContent'])
+    #省略clean步骤
+    #cut步骤
+    pr = DataQuery.get_parameters_by_type_and_model(type, "CutModel")
+    print(pr)
+    Parameters = json.loads(DataQuery.get_parameters_by_type_and_model(type, "CutModel"))
+    threshold = Parameters['threshold']
+    extension = Parameters['extension']
+    start_index, end_index, bias = DataCut.find_waveform_segment(data, threshold, extension)
+    cut_data = data[start_index:end_index]
+    for item in cut_data:
+        item['value'] -= bias
+    #filter步骤
+    Parameters = json.loads(DataQuery.get_parameters_by_type_and_model(type, "FilterModel"))
+    window_size = Parameters['window_size']
+    filtered_data = DataFilter.filter_data(cut_data, window_size)
+    #计算绝对值最大值
+    max_abs_value = max(abs(d['value']) for d in filtered_data)
+    return jsonify({"status": "success", "data": filtered_data, "max_abs": max_abs_value})

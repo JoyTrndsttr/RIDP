@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import pandas as pd
-# from utils import DataQuery
-import DataQuery
+from utils import DataQuery
+# import DataQuery
 
 def filter_data(data, window_size):
     values = np.array([d['value'] for d in data])
