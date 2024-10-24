@@ -31,6 +31,23 @@ def get_file_name_and_content_by_bridge_time_type(bridge, time, type):
     finally:
         connection.close()
 
+def get_sample_metrics_data():
+    sql = '''
+    SELECT m.ID, m.Bridge, m.Time, m.Type, m.FileName, fc.Content
+    FROM Metrics m
+    JOIN FileContents fc ON m.ContentID = fc.ContentID
+    ORDER BY m.ID LIMIT 100;
+    '''
+    try:
+        connection = connect_db()
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results if results else None
+    finally:
+        if connection:
+            connection.close()
+
 def get_parameters_by_type_and_model(type, model_type):
     sql = "SELECT Parameters FROM model WHERE Type = %s AND ModelType = %s;"
     try:
@@ -51,3 +68,15 @@ def update_parameters_by_type_and_model(type, model_type, new_parameters):
             connection.commit()
     finally:
         connection.close()
+
+def get_model_data():
+    sql = '''SELECT * FROM model'''
+    try:
+        connection = connect_db()
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            return results if results else None
+    finally:
+        if connection:
+            connection.close()

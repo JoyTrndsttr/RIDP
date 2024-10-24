@@ -3,8 +3,10 @@ from routes.locations import locations_bp
 from routes.metrics import metrics_bp
 from routes.process import process_bp
 from routes.model_management import model_management_bp
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # 注册蓝图
 app.register_blueprint(locations_bp, url_prefix='/api/ridp')
